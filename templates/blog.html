@@ -3,7 +3,15 @@
 {% block content %}
     <h1>Build a Blog</h1>
 
-
+    <div>
+        <a href='/login'>Login</a>
+    </div>
+    <div>
+        <a href='/signup'>Sign Up!</a>
+    </div>
+    <div>
+        <a href ='/newpost?id={{user_id}}'>New Post</a>
+    </div>
     {% for blog in blogs %}
         <div>
             <a href='/blog?id={{blog.id}}'>{{blog.title}}</a>
