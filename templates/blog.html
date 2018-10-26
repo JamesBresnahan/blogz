@@ -1,22 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Build a Blog</h1>
-
-    <div>
-        <a href='/login'>Login</a>
-    </div>
+    <h1>All Posts</h1>
     <div>
         <a href='/signup'>Sign Up!</a>
     </div>
     <div>
-        <a href ='/newpost?id={{user_id}}'>New Post</a>
+        <a href ='/add-a-blog-entry'>New Post</a>
     </div>
     {% for blog in blogs %}
         <div>
-            <a href='/blog?id={{blog.id}}'>{{blog.title}}</a>
+            <h3><a href='/blog?id={{blog.id}}'>{{blog.title}}</a></h3>
         </div>
-            <p >{{blog.body}}</p>>
+            <p >{{blog.body}}</p>
+        <div>
+            <h4>written by<a href='blog?user={{blog.owner_id}}'>{{blog.owner_id.user_name}}</a></h4>
+        </div>
             
     {% endfor %}
 

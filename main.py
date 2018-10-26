@@ -14,7 +14,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(50))
-    #blogs = db.relationship('Blog', backref='owner')
+    blogs = db.relationship('Blog', backref='owner')
 
     def __init__(self, user_name, password):
         self.user_name = user_name
@@ -93,11 +93,14 @@ def signup():
             return redirect('/add-a-blog-entry')
     return render_template('signup.html')
     
-#add log out
+@app.route("/logout", methods=['POST'])
+def logout():
+    del session['user']
+    return redirect("/blog")
 
 @app.route('/main-blog-page')
 def main_blog_page():
-    return redirect('/blog')
+    return redirect('/')
 
 @app.route('/add-a-blog-entry', methods= ['POST', 'GET'])
 def add_a_blog_entry():
@@ -121,6 +124,7 @@ def add_a_blog_entry():
     
 @app.route('/blog', methods=['POST', 'GET'])
 def blog():
+    #if request.method=='GET':
 
     if request.method == 'POST':
         blog_title = request.form['title']
@@ -131,19 +135,35 @@ def blog():
 
     blogs = Blog.query.filter_by(valid=True).all()
     id = request.args.get('id')
+    user_id = request.args.get('user')
 
     if id:
         blog_post = Blog.query.filter_by(id=id).first()
-        return render_template('blogsingleentry.html', title= blog_post.title, body= blog_post.body)
-    
+        owner = User.query.filter_by(id=blog_post.owner_id).first()
+        return render_template('blogsingleentry.html', title= blog_post.title, body= blog_post.body, author= owner.user_name, user_id= blog_post.owner_id)
+    if user_id:
+        blogs = Blog.query.filter_by(owner_id=user_id).all()
+        owner = User.query.filter_by(id=user_id).first()
+        return render_template('blog-single-user.html', blogs = blogs, author = owner.user_name)
+
+    #user = User.query.filter_by(id = blogs.owner_id).first()
+    #author = user.user_name
     return render_template('blog.html',title="Build a Blog", blogs=blogs, id=id)
 
- 
+@app.route('/', methods=['POST', 'GET'])
+def index():
+    users = User.query.all()
+    print(users)
+    return render_template('blog-users.html', users = users)
+
+
 @app.before_request
 def require_login():
-    allowed_routes=['blog', 'login', 'signup', 'main-blog-page']
+    allowed_routes=['blog', 'login', 'signup', 'main-blog-page', 'index']
     if request.endpoint not in allowed_routes and 'user' not in session:
         return redirect('/login')
+
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RU'
 
 if __name__ == '__main__':
     app.run()

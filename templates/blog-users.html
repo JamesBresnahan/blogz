@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Blog Users</h1>
+    <div>
+        <a href='/signup'>Sign Up!</a>
+    </div>
+    <div>
+        <a href ='/add-a-blog-entry'>New Post</a>
+    </div>
+    {% for user in users %}
+        <div>
+            <h3><a href='/blog?user={{user.id}}'>{{user.user_name}}</a></h3>
+        </div>
+
+            
+    {% endfor %}
+
+
+
+{% endblock %}

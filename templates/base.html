@@ -11,20 +11,22 @@
 <body>
 
     <div>
-        <a href ='/blog'>Main Blog Page</a>
+        <a href ='/'>Main Blog Page</a>
     </div>
 
     <div>
-        <a href = '/add-a-blog-entry'>Add a Blog Entry</a>
+        <a href = '/blog'>All Posts</a>
     </div>
     <div style='float: right'>
         {% if 'user' in session %}
-          {{ session['user'] }}
-          <form action="/logout" method="post" id='logout'>
-            <input type="submit" value="Log Out" />
-          </form>
+            {{ session['user'] }}
+            <a href = '/'>Home</a>
+            <form action = '/logout', method = 'post'>
+                <input type = 'submit' value = 'Logout'/>
+            </form>
         {% else %}
-          <a href="login">login</a> | <a href="register">register</a>
+            <a href = '/blog'>Home</a>
+            <a href="/login">login</a> | <a href="/signup">register</a>
         {% endif %}
     </div>
     {% with messages = get_flashed_messages() %}
